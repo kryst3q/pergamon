@@ -1,6 +1,6 @@
 <?php
 
-class Book {
+class Book Implements JsonSerializable {
     
     private $id;
     private $title;
@@ -10,6 +10,14 @@ class Book {
         $this->id = -1;
         $this->title = "";
         $this->author = "";
+    }
+    
+    public function jsonSerialize() {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'author' => $this->author
+        ];
     }
 
     function setTitle($title) {
@@ -67,25 +75,38 @@ class Book {
         
     }
     
-    public function loadFromDB($connection) {
+    public function loadFromDB($connection,$id = null) {
         
-        $query = "SELECT * FROM Books";
+        $query;
+        
+        if (empty($id)) {
+            
+            $query = "SELECT * FROM Books";
+            
+        } else {
+            
+            $query = "SELECT * FROM Books WHERE id=$id";
+            
+        }
+        
         $result = $connection->query($query);
         
-        $books = [];
+        $books;
         
         if (($result == TRUE) && ($result->num_rows != 0)) {
             
-            for ($i = 0; $i < $result->num_rows; $i++) {
+            foreach ($result as $row) {
                 
                 $book = new Book();
-                $book->getId();
-                $book->getAuthor();
-                $book->getTitle();
+                $book->id = $row['id'];
+                $book->title = $row['title'];
+                $book->author = $row['author'];
 
-                $books[] = $book;
+                $books = $book;
             
             }
+            
+            return $books;
             
         } else {
             
