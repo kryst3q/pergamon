@@ -34,7 +34,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     parse_str(file_get_contents("php://input"), $put_vars);
     $result = Book::update($conn, $put_vars['id'], $put_vars['title'], $put_vars['author'], $put_vars['description']);
-//    header('Content-Type: json');
-//    echo json_encode($result);
     
 }
