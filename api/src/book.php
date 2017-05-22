@@ -23,31 +23,47 @@ class Book Implements JsonSerializable {
         ];
     }
 
-    function setTitle($title) {
-        $this->title = $title;
+    public function validator($text) {
+        
+        $text = trim($text);
+        $text = stripslashes($text);
+        $text = htmlspecialchars($text);
+        
+        return $text;
+        
+    }
+    
+    public function setTitle($title) {
+        
+        $this->title = $this->validator($title);
+        
     }
 
-    function setAuthor($author) {
-        $this->author = $author;
+    public function setAuthor($author) {
+        
+        $this->author = $this->validator($author);
+        
     }
     
-    function setDescription($description) {
-        $this->description = $description;
+    public function setDescription($description) {
+        
+        $this->description = $this->validator($description);
+        
     }
     
-    function getId() {
+    public function getId() {
         return $this->id;
     }
 
-    function getTitle() {
+    public function getTitle() {
         return $this->title;
     }
 
-    function getAuthor() {
+    public function getAuthor() {
         return $this->author;
     }
     
-    function getDescription() {
+    public function getDescription() {
         return $this->description;
     }
 
@@ -60,7 +76,7 @@ class Book Implements JsonSerializable {
             
         }
         
-        $query = "INSERT INTO Books (title, author, description) VALUES ('" . $title . "', '" . $author . "', '" . $description . "')";
+        $query = "INSERT INTO Books (title, author, description) VALUES ('" . self::validator($title) . "', '" . self::validator($author) . "', '" . self::validator($description) . "')";
         $result = $connection->query($query);
         
         if ($result) {
@@ -75,25 +91,27 @@ class Book Implements JsonSerializable {
         
     }
     
-    static public function update($connection, $id, $title = "", $author = "", $description = "") {
+    static public function update($connection, $id, $title = undefined, $author = undefined, $description = undefined) {
         
-        if (!empty($title)) {
+        $Id = (int)$id;
+        
+        if (is_string($title) && (!empty($title))) {
             
-            $query = "UPDATE Books SET title='" . $title . "' WHERE id=" . (int)$id;
+            $query = "UPDATE Books SET title='" . self::validator($title) . "' WHERE id=" . $Id;
             $result = $connection->query($query);
             
         }
         
-        if (!empty($author)) {
+        if (is_string($author) && (!empty($author))) {
             
-            $query = "UPDATE Books SET author='" . $author . "' WHERE id=" . (int)$id;
+            $query = "UPDATE Books SET author='" . self::validator($author) . "' WHERE id=" . $Id;
             $result = $connection->query($query);
             
         }
         
-        if (!empty($description)) {
+        if (is_string($description) && (!empty($description))) {
             
-            $query = "UPDATE Books SET description='" . $description . "' WHERE id=" . (int)$id;
+            $query = "UPDATE Books SET description='" . self::validator($description) . "' WHERE id=" . $Id;
             $result = $connection->query($query);
             
         }
