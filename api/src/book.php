@@ -77,6 +77,7 @@ class Book Implements JsonSerializable {
         }
         
         $query = "INSERT INTO Books (title, author, description) VALUES ('" . self::validator($title) . "', '" . self::validator($author) . "', '" . self::validator($description) . "')";
+
         $result = $connection->query($query);
         
         if ($result) {
@@ -128,6 +129,7 @@ class Book Implements JsonSerializable {
         
     }
     
+
     static public function loadFromDB($connection,$id = null) {
         
         $query;
@@ -135,7 +137,7 @@ class Book Implements JsonSerializable {
         if ($id == null) {
             
             $query = "SELECT * FROM Books ORDER BY title ASC";
-            
+
         } else {
             
             $query = "SELECT * FROM Books WHERE id=$id";
@@ -147,7 +149,7 @@ class Book Implements JsonSerializable {
         $books = [];
         
         if ($result->num_rows != 0) {
-            
+
             foreach ($result as $row) {
                 
                 $book = new Book();
